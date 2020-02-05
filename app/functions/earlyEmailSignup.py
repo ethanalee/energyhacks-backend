@@ -11,7 +11,7 @@ def earlyEmailSignup(request):
 	if "email" in request_json and request.method == 'POST':
 
 		with getDb().connect() as conn:
-			query = "INSERT into early_signups VALUES ('%s')" % request_json["email"]
+			query = "INSERT into early_signups VALUES (NULL, '%s')" % request_json["email"]
 			print("Executing %s" % query)
 			conn.execute(query)
 	

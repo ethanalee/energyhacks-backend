@@ -6,7 +6,8 @@ is_prod = os.environ.get("IS_PROD") == "1"
 db_user = os.environ.get("DB_USER")
 db_pass = os.environ.get("DB_PASS")
 db_name = os.environ.get("DB_NAME")
-cloud_sql_connection_name = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
+db_host = os.environ.get("DB_HOST")
+cloud_sql_connection_name = "uwenca:us-central1:energyhacks-2020"
 
 db = None
 
@@ -16,11 +17,9 @@ class MockDb:
 		self.queries = []
 
 	def connect(self):
-		print("TEST")
 		return self
 
 	def __enter__(self):
-		print("TEST")
 		return self
 
 	def __exit__(self, type, value, traceback):
@@ -34,11 +33,13 @@ def getDb():
 	if db:
 		return db
 
+	print(db_user)
+
 	if is_prod:
 		db = sqlalchemy.create_engine(
 			sqlalchemy.engine.url.URL(
 				drivername="mysql+pymysql",
-				host="35.202.67.125" if os.name == 'nt' else None,
+				host=db_host if os.name == 'nt' else None,
 				username=db_user,
 				password=db_pass,
 				database=db_name,
