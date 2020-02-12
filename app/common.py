@@ -1,16 +1,19 @@
 import sqlalchemy
 import pymysql
 import os
+from mailchimp3 import MailChimp
 
 is_prod = os.environ.get("IS_PROD") == "1"
 db_user = os.environ.get("DB_USER")
 db_pass = os.environ.get("DB_PASS")
 db_name = os.environ.get("DB_NAME")
 db_host = os.environ.get("DB_HOST")
+mailchimp_api_key = os.environ.get("MAILCHIMP_API_KEY")
+
 cloud_sql_connection_name = "uwenca:us-central1:energyhacks-2020"
 
+# Database common
 db = None
-
 class MockDb:
 	def __init__(self):
 		print("Using Mock DB")
@@ -33,8 +36,6 @@ def getDb():
 	if db:
 		return db
 
-	print(db_user)
-
 	if is_prod:
 		db = sqlalchemy.create_engine(
 			sqlalchemy.engine.url.URL(
@@ -51,6 +52,7 @@ def getDb():
 
 	return db
 
+# Web request common
 def buildReponse(message, code):
 	return (message, code, {'Access-Control-Allow-Origin': '*'})
 
@@ -66,3 +68,28 @@ def checkCORS(request):
 		}
 		return ('', 204, headers)
 	return None
+
+# Mailchimp common
+class MockMailchimpClient:
+	def __init__(self):
+		print("Using Mock Mailchimp Client")
+		self.lists = self
+		self.members = self
+		self.lastDataAdded = None
+
+	def create(self, list_id, data):
+		self.lastDataAdded = data
+
+mailchimpClient = None
+
+def getMailchimpClient():
+	global mailchimpClient
+	if mailchimpClient:
+		return mailchimpClient
+	
+	if is_prod:
+		mailchimpClient = MailChimp(mc_api=mailchimp_api_key)
+	else:
+		mailchimpClient = MockMailchimpClient()
+
+	return mailchimpClient
