@@ -23,4 +23,5 @@ jobs:
         sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
     - name: Deploy Function 
       run: |
-        gcloud functions deploy earlyEmailSignup --project uwenca --service-account github-actions@uwenca.iam.gserviceaccount.com
+        gcloud functions deploy earlyEmailSignup --project uwenca --service-account github-actions@uwenca.iam.gserviceaccount.com  --source https://source.developers.google.com/projects/uwenca/repos/github_uwenergynetwork_energyhacks-backend/moveable-aliases/master
+
