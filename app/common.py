@@ -77,7 +77,7 @@ class MockMailchimpClient:
 		self.members = self
 		self.lastDataAdded = None
 
-	def create(self, list_id, data):
+	def create_or_update(self, list_id, data):
 		self.lastDataAdded = data
 
 mailchimpClient = None
