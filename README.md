@@ -4,4 +4,5 @@ Instructions to connect to DB
 
 
 Run tests
-* python -m pytest (Running tests not working on GitHub, please run locally!)
+* `python -m pytest` 
+* unning tests not working on GitHub, please run locally!)
